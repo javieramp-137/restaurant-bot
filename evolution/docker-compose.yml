@@ -1,0 +1,63 @@
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: evolution_postgres
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: evolution
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: always
+
+  redis:
+    image: redis:7
+    container_name: evolution_redis
+
+    ports:
+      - "6379:6379"
+
+    restart: always
+
+  evolution-api:
+    image: evoapicloud/evolution-api:v2.1.1
+    container_name: evolution_api
+
+    depends_on:
+      - postgres
+      - redis
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      - SERVER_TYPE=http
+      - SERVER_PORT=8080
+      - AUTHENTICATION_API_KEY=123456
+
+      # DATABASE
+      - DATABASE_ENABLED=true
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_CONNECTION_URI=postgresql://postgres:postgres@postgres:5432/evolution
+
+      # REDIS
+      - CACHE_REDIS_ENABLED=true
+      - CACHE_REDIS_URI=redis://redis:6379
+
+      # SESSION
+      - CONFIG_SESSION_PHONE_CLIENT=Chrome
+
+      # QRCODE
+      - QRCODE_LIMIT=30
+
+    restart: always
+
+volumes:
+  postgres_data:
