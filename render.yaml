@@ -1,45 +1,85 @@
 services:
+
+  # ─────────────────────────────────────────────
+  #  EVOLUTION API  (WhatsApp Gateway)
+  # ─────────────────────────────────────────────
   - type: web
     name: evolution-api
     runtime: docker
     repo: https://github.com/javy012/restaurant-bot
+    branch: main
     rootDir: evolution
-    plan: free          # free no soporta WebSockets estables — mínimo starter
-envVars:
-  - key: SERVER_URL
-    sync: false
+    plan: free
+    envVars:
 
-  - key: AUTHENTICATION_API_KEY
-    value: 123456
+      # ── Servidor ──────────────────────────────
+      - key: SERVER_TYPE
+        value: http
+      - key: SERVER_PORT
+        value: 8080
 
-  - key: DATABASE_ENABLED
-    value: true
+      # IMPORTANTE: reemplaza con la URL real que Render te asigne
+      # Ejemplo: https://evolution-api-xxxx.onrender.com
+      - key: SERVER_URL
+        value: https://evolution-api.onrender.com
 
-  - key: DATABASE_PROVIDER
-    value: postgresql
+      # ── Autenticación ─────────────────────────
+      # Cambia este valor por una clave segura tuya
+      - key: AUTHENTICATION_API_KEY
+        value: mi_clave_secreta_123
 
-  - key: DATABASE_CONNECTION_URI
-    sync: false
+      # ── Base de datos (Neon PostgreSQL) ────────
+      - key: DATABASE_ENABLED
+        value: true
+      - key: DATABASE_PROVIDER
+        value: postgresql
+      # Pega aquí la "Connection string" de Neon.tech
+      # Formato: postgresql://user:pass@host/dbname?sslmode=require
+      - key: DATABASE_CONNECTION_URI
+        value: PEGAR_URI_DE_NEON_AQUI
 
-  - key: CACHE_REDIS_ENABLED
-    value: true
+      # ── Redis (Upstash) ────────────────────────
+      - key: CACHE_REDIS_ENABLED
+        value: true
+      # Pega aquí la Redis URL de Upstash
+      # Formato: rediss://default:password@host:port
+      - key: CACHE_REDIS_URI
+        value: PEGAR_URI_DE_UPSTASH_AQUI
+      - key: CACHE_REDIS_PREFIX_KEY
+        value: evolution
 
-  - key: CACHE_REDIS_URI
-    sync: false
+      # ── WhatsApp / QR ─────────────────────────
+      - key: CONFIG_SESSION_PHONE_CLIENT
+        value: Chrome
+      - key: CONFIG_SESSION_PHONE_VERSION
+        value: 2.3000.1023054779
+      - key: QRCODE_LIMIT
+        value: 30
+      - key: QRCODE_COLOR
+        value: "#000000"
 
-  - key: CONFIG_SESSION_PHONE_CLIENT
-    value: Chrome
+      # ── Logs ──────────────────────────────────
+      - key: LOG_LEVEL
+        value: ERROR
+      - key: LOG_COLOR
+        value: false
+      - key: LOG_BAILEYS
+        value: false
 
-  - key: QRCODE_LIMIT
-    value: 30
-
+  # ─────────────────────────────────────────────
+  #  N8N  (Automatización / Bot)
+  # ─────────────────────────────────────────────
   - type: web
     name: restaurant-n8n
     runtime: docker
     repo: https://github.com/javy012/restaurant-bot
+    branch: main
     rootDir: n8n
-    plan: free          # free se duerme y pierde la sesión de n8n
+    plan: free
     envVars:
+
+      # IMPORTANTE: reemplaza con la URL real que Render te asigne
+      # Ejemplo: https://restaurant-n8n-xxxx.onrender.com
       - key: N8N_HOST
         value: restaurant-n8n.onrender.com
       - key: N8N_PROTOCOL
@@ -50,3 +90,7 @@ envVars:
         value: 5678
       - key: N8N_SECURE_COOKIE
         value: false
+
+      # Clave de encriptación — usa la misma que ya tenías en tu config
+      - key: N8N_ENCRYPTION_KEY
+        value: 8MREKWOIlAgd5nUeDUtWTrT9y/F6/8yx
