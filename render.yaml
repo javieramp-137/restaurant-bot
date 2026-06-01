@@ -4,7 +4,7 @@ services:
     runtime: docker
     repo: https://github.com/javy012/restaurant-bot
     rootDir: evolution
-    plan: starter          # free no soporta WebSockets estables — mínimo starter
+    plan: free          # free no soporta WebSockets estables — mínimo starter
 envVars:
   - key: SERVER_URL
     sync: false
@@ -38,11 +38,7 @@ envVars:
     runtime: docker
     repo: https://github.com/javy012/restaurant-bot
     rootDir: n8n
-    plan: starter          # free se duerme y pierde la sesión de n8n
-    disk:
-      name: n8n-data
-      mountPath: /home/node/.n8n
-      sizeGB: 1            # disco persistente para que n8n no pierda workflows
+    plan: free          # free se duerme y pierde la sesión de n8n
     envVars:
       - key: N8N_HOST
         value: restaurant-n8n.onrender.com
