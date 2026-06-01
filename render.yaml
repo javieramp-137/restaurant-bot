@@ -7,7 +7,6 @@ services:
     name: evolution-api
     runtime: docker
     repo: https://github.com/javy012/restaurant-bot
-    branch: main
     rootDir: evolution
     plan: free
     envVars:
@@ -73,7 +72,6 @@ services:
     name: restaurant-n8n
     runtime: docker
     repo: https://github.com/javy012/restaurant-bot
-    branch: main
     rootDir: n8n
     plan: free
     envVars:
