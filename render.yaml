@@ -6,7 +6,7 @@ services:
   - type: web
     name: evolution-api
     runtime: docker
-    repo: https://github.com/javy012/restaurant-bot
+    repo: https://github.com/javieramp-137/restaurant-bot
     rootDir: evolution
     plan: free
     envVars:
@@ -71,7 +71,7 @@ services:
   - type: web
     name: restaurant-n8n
     runtime: docker
-    repo: https://github.com/javy012/restaurant-bot
+    repo: https://github.com/javieramp-137/restaurant-bot
     rootDir: n8n
     plan: free
     envVars:
