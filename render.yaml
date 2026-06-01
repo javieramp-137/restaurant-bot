@@ -4,41 +4,53 @@ services:
     runtime: docker
     repo: https://github.com/javy012/restaurant-bot
     rootDir: evolution
-    plan: free
-    envVars:
-      - key: SERVER_URL
-        value: https://evolution-api.onrender.com
+    plan: starter          # free no soporta WebSockets estables — mínimo starter
+envVars:
+  - key: SERVER_URL
+    sync: false
 
-      - key: AUTHENTICATION_API_KEY
-        value: 123456
+  - key: AUTHENTICATION_API_KEY
+    value: 123456
 
-      - key: DATABASE_ENABLED
-        value: true
+  - key: DATABASE_ENABLED
+    value: true
 
-      - key: DATABASE_CONNECTION_URI
-        sync: false
+  - key: DATABASE_PROVIDER
+    value: postgresql
 
-      - key: REDIS_ENABLED
-        value: true
+  - key: DATABASE_CONNECTION_URI
+    sync: false
 
-      - key: REDIS_URI
-        sync: false
+  - key: CACHE_REDIS_ENABLED
+    value: true
+
+  - key: CACHE_REDIS_URI
+    sync: false
+
+  - key: CONFIG_SESSION_PHONE_CLIENT
+    value: Chrome
+
+  - key: QRCODE_LIMIT
+    value: 30
 
   - type: web
     name: restaurant-n8n
     runtime: docker
     repo: https://github.com/javy012/restaurant-bot
     rootDir: n8n
-    plan: free
+    plan: starter          # free se duerme y pierde la sesión de n8n
+    disk:
+      name: n8n-data
+      mountPath: /home/node/.n8n
+      sizeGB: 1            # disco persistente para que n8n no pierda workflows
     envVars:
       - key: N8N_HOST
         value: restaurant-n8n.onrender.com
-
       - key: N8N_PROTOCOL
         value: https
-
       - key: WEBHOOK_URL
         value: https://restaurant-n8n.onrender.com
-
       - key: N8N_PORT
         value: 5678
+      - key: N8N_SECURE_COOKIE
+        value: false
