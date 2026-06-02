@@ -1,7 +1,7 @@
 services:
 
   # ─────────────────────────────────────────────
-  #  EVOLUTION API  (WhatsApp Gateway)
+  #  EVOLUTION API v1.8.2  (WhatsApp Gateway)
   # ─────────────────────────────────────────────
   - type: web
     name: evolution-api
@@ -16,54 +16,72 @@ services:
         value: http
       - key: SERVER_PORT
         value: 8080
-
-      # IMPORTANTE: reemplaza con la URL real que Render te asigne
-      # Ejemplo: https://evolution-api-xxxx.onrender.com
       - key: SERVER_URL
-        value: https://evolution-api.onrender.com
+        value: https://evolution-api-y4sd.onrender.com
 
       # ── Autenticación ─────────────────────────
-      # Cambia este valor por una clave segura tuya
+      - key: AUTHENTICATION_TYPE
+        value: apikey
       - key: AUTHENTICATION_API_KEY
         value: mi_clave_secreta_123
+      - key: AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES
+        value: true
 
       # ── Base de datos (Neon PostgreSQL) ────────
       - key: DATABASE_ENABLED
         value: true
-      - key: DATABASE_PROVIDER
-        value: postgresql
-      # Pega aquí la "Connection string" de Neon.tech
-      # Formato: postgresql://user:pass@host/dbname?sslmode=require
       - key: DATABASE_CONNECTION_URI
         value: PEGAR_URI_DE_NEON_AQUI
+      - key: DATABASE_CONNECTION_CLIENT_NAME
+        value: evolution_exchange
 
       # ── Redis (Upstash) ────────────────────────
-      - key: CACHE_REDIS_ENABLED
+      - key: REDIS_ENABLED
         value: true
-      # Pega aquí la Redis URL de Upstash
-      # Formato: rediss://default:password@host:port
-      - key: CACHE_REDIS_URI
+      - key: REDIS_URI
         value: PEGAR_URI_DE_UPSTASH_AQUI
-      - key: CACHE_REDIS_PREFIX_KEY
+      - key: REDIS_PREFIX_KEY
         value: evolution
 
       # ── WhatsApp / QR ─────────────────────────
-      - key: CONFIG_SESSION_PHONE_CLIENT
-        value: Chrome
-      - key: CONFIG_SESSION_PHONE_VERSION
-        value: 2.3000.1023054779
       - key: QRCODE_LIMIT
         value: 30
       - key: QRCODE_COLOR
         value: "#000000"
 
+      # ── Storage (mínimo para ahorrar RAM) ─────
+      - key: STORE_MESSAGES
+        value: false
+      - key: STORE_MESSAGE_UP
+        value: false
+      - key: STORE_CONTACTS
+        value: false
+      - key: STORE_CHATS
+        value: false
+      - key: CLEAN_STORE_CLEANING_INTERVAL
+        value: 7200
+      - key: CLEAN_STORE_MESSAGES
+        value: true
+      - key: CLEAN_STORE_MESSAGE_UP
+        value: true
+      - key: CLEAN_STORE_CONTACTS
+        value: true
+      - key: CLEAN_STORE_CHATS
+        value: true
+
+      # ── Instancias ────────────────────────────
+      - key: DEL_INSTANCE
+        value: false
+      - key: DEL_TEMP_INSTANCES
+        value: true
+
       # ── Logs ──────────────────────────────────
       - key: LOG_LEVEL
         value: ERROR
       - key: LOG_COLOR
-        value: false
+        value: true
       - key: LOG_BAILEYS
-        value: false
+        value: error
 
   # ─────────────────────────────────────────────
   #  N8N  (Automatización / Bot)
@@ -75,9 +93,6 @@ services:
     rootDir: n8n
     plan: free
     envVars:
-
-      # IMPORTANTE: reemplaza con la URL real que Render te asigne
-      # Ejemplo: https://restaurant-n8n-xxxx.onrender.com
       - key: N8N_HOST
         value: restaurant-n8n.onrender.com
       - key: N8N_PROTOCOL
@@ -88,7 +103,5 @@ services:
         value: 5678
       - key: N8N_SECURE_COOKIE
         value: false
-
-      # Clave de encriptación — usa la misma que ya tenías en tu config
       - key: N8N_ENCRYPTION_KEY
         value: 8MREKWOIlAgd5nUeDUtWTrT9y/F6/8yx
